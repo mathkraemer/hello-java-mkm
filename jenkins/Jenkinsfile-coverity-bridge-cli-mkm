@@ -14,7 +14,7 @@ pipeline {
         //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}" // via node env. config
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package'
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean'
-        //BRIDGE_COVERITY_LOCAL = true
+        BRIDGE_COVERITY_LOCAL = true
         //BRIDGE_COVERITY_VERSION = '2025.12.0'
         //GITHUB_TOKEN = credentials('github-pat')
         //GITHUB_TOKEN = credentials("mathkraemer")
