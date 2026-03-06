@@ -57,7 +57,7 @@ pipeline {
         }
         //github.repository.owner.name=$ORG_NAME \
         stage('Coverity PR Scan') {
-            when { environment name: 'PRSCAN', value: 'false' }
+            when { environment name: 'PRSCAN', value: 'true' }
             steps {
                 script {
                     def status = bat(returnStatus: true, script:  '''
