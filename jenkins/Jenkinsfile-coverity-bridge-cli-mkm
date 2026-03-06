@@ -11,7 +11,7 @@ pipeline {
     agent { label 'win64' }
     environment {
         //ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
-        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-1]}"
+        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
