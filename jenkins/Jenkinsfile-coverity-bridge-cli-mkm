@@ -36,7 +36,9 @@ pipeline {
                 echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
                 echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
-                bat (set)
+                script {
+                    bat(set)
+                }
             }
         }
         stage('Coverity Full Scan') {
