@@ -73,10 +73,10 @@ pipeline {
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
                             coverity.prcomment.impacts="[High, Medium, Low, Audit]" \
-                            github.repository.name=hello-java-mkm \
+                            github.repository.name=%REPO_NAME% \
                             github.repository.owner.name=mathkraemer \
                             github.repository.branch.name=%BRANCH_NAME% \
-                            github.repository.pull.number=1 \
+                            github.repository.pull.number=%CHANGE_ID% \
                             github.user.token=%GITHUB_TOKEN%
                     ''')
                     if (status == 8) { unstable 'policy violation' }
