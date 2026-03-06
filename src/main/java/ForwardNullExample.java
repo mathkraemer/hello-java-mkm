@@ -15,5 +15,10 @@ public class ForwardNullExample {
         return o.toString();
     }
 
-    //implement new functionality here soon...
+    public static String testbug_1(Object o) {
+        if (o == null)
+            return o.toString();
+        else
+            return "empty";
+    }
 }
