@@ -4,7 +4,7 @@ pipeline {
     agent { label 'win64' }
     environment {
         ORG_NAME = "tests" //"${env.GIT_URL.tokenize('/.')[-3]}"
-        REPO_NAME = ${env.GIT_URL.tokenize('/.')[-1]}"
+        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-1]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGECLI_WIN64_HOME = 'C:\\Products\\br\\fc4000'
