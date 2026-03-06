@@ -14,4 +14,7 @@ public class ForwardNullExample {
     public static String testA(Object o) {
         return o.toString();
     }
+
+    //implement new function here
+
 }
