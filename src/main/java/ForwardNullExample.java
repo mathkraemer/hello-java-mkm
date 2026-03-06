@@ -15,5 +15,5 @@ public class ForwardNullExample {
         return o.toString();
     }
 
-    //implement new functionality here...
+    //implement new functionality here soon...
 }
