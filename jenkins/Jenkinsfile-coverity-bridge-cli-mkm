@@ -37,7 +37,7 @@ pipeline {
                 echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
                 script {
-                    bat(set)
+                    bat('set')
                 }
             }
         }
