@@ -4,7 +4,7 @@ pipeline {
     agent { label 'win64' }
     environment {
         ORG_NAME = "tests" //"${env.GIT_URL.tokenize('/.')[-3]}"
-        REPO_NAME = "java-hello" //${env.GIT_URL.tokenize('/.')[-2]}"
+        REPO_NAME = ${env.GIT_URL.tokenize('/.')[-1]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGECLI_WIN64_HOME = 'C:\\Products\\br\\fc4000'
@@ -26,7 +26,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Starting build #$BUILD_NUMBER for repo ${env.GIT_URL} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
+                echo "Starting build #$BUILD_NUMBER for url ${env.GIT_URL} of repo ${REPO_NAME} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
                 echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
                 echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
