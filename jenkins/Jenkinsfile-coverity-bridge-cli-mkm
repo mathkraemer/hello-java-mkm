@@ -54,7 +54,7 @@ pipeline {
                             coverity.connect.policy.view=Security-Policy \
                             coverity.args="-o commit.connect.description=\\"%BUILD_TAG%\\""
                     ''')
-                    echo "Status $status"
+                    echo "Full Scan Status: $status"
                     if (status == 8) { unstable 'policy violation' }
                     else if (status != 0) { error "scan failure, returned $status" }
                 }
@@ -80,8 +80,9 @@ pipeline {
                             github.repository.pull.number=%CHANGE_ID% \
                             github.user.token=%GITHUB_TOKEN%
                     ''')
+                    echo "PR Scan Status: $status"
                     if (status == 8) { unstable 'policy violation' }
-                    else if (status != 0) { error 'scan failure' }
+                    else if (status != 0) { error "scan failure, returning $status" }
                 }
             }
         }
