@@ -1,21 +1,26 @@
 // example Jenkinsfile for Coverity scans using the Bridge CLI
 // https://documentation.blackduck.com/bundle/bridge/page/documentation/c_overview.html
+
+// Properties defined on Jenkins node:
+// BRIDGE_CLI_INSTALL_DIRECTORY
+// BRIDGE_COVERITY_INSTALL_DIRECTORY
+// BRIDGE_COVERITY_CONNECT_USER_NAME
+// BRIDGE_COVERITY_CONNECT_USER_PASSWORD
+// GITHUB_TOKEN
 pipeline {
     agent { label 'win64' }
     environment {
-        ORG_NAME = "tests" //"${env.GIT_URL.tokenize('/.')[-3]}"
+        //ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-1]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
-        BRIDGECLI_WIN64_HOME = 'C:\\Products\\br\\fc4000'
         BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
         //COVERITY_CREDENTIALS = credentials('coverity-committer')
         //BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}" // via node env. config
         //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}" // via node env. config
-        //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package'
-        //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean'
+        //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
+        //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
         BRIDGE_COVERITY_LOCAL = true
-        //BRIDGE_COVERITY_VERSION = '2025.12.0'
         //GITHUB_TOKEN = credentials('github-pat')
         //GITHUB_TOKEN = credentials("mathkraemer")
     }
@@ -37,7 +42,7 @@ pipeline {
             steps {
                 script {
                     def status = bat(returnStatus: true, script: '''
-                        %BRIDGECLI_WIN64_HOME%\\bridge-cli.exe --stage connect \
+                        %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
                             coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
@@ -59,7 +64,7 @@ pipeline {
                          set CHANGE_TARGET=main
                          echo CHANGE_ID: %CHANGE_ID%
                          set
-                         %BRIDGECLI_WIN64_HOME%\\bridge-cli.exe --stage connect \
+                         %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
