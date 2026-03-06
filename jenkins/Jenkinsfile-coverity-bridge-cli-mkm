@@ -32,6 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Starting build #$BUILD_NUMBER for url ${env.GIT_URL} of repo ${REPO_NAME} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
+                echo "Branch-Name: ${env.BRANCH_NAME} // CHANGE_TARGET: ${env.CHANGE_TARGET}"
                 echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
                 echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
