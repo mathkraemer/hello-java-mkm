@@ -47,7 +47,7 @@ pipeline {
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
                             coverity.connect.policy.view=Security-Policy \
-                            coverity.args="-o commit.connect.description=test"
+                            coverity.args="-o commit.connect.description=\\"%BUILD_TAG%\\""
                     ''')
                     echo "Status $status"
                     if (status == 8) { unstable 'policy violation' }
