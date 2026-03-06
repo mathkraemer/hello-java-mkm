@@ -38,6 +38,7 @@ pipeline {
                 echo 'mvn -B package'
                 script {
                     bat('set')
+                    bat('echo GH-PAT: %GITHUB_TOKEN%')
                 }
             }
         }
