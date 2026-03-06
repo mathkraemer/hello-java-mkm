@@ -1,0 +1,87 @@
+// example Jenkinsfile for Coverity scans using the Bridge CLI
+// https://documentation.blackduck.com/bundle/bridge/page/documentation/c_overview.html
+pipeline {
+    agent { label 'win64' }
+    environment {
+        ORG_NAME = "tests" //"${env.GIT_URL.tokenize('/.')[-3]}"
+        REPO_NAME = "java-hello" //${env.GIT_URL.tokenize('/.')[-2]}"
+        FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+        PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+        BRIDGECLI_WIN64_HOME = 'C:\\Products\\br\\fc4000'
+        BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
+        //COVERITY_CREDENTIALS = credentials('coverity-committer')
+        //BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}" // via node env. config
+        //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}" // via node env. config
+        //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package'
+        //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean'
+        //BRIDGE_COVERITY_LOCAL = true
+        //BRIDGE_COVERITY_VERSION = '2025.12.0'
+        //GITHUB_TOKEN = credentials('github-pat')
+        //GITHUB_TOKEN = credentials("mathkraemer")
+    }
+    tools {
+        maven 'MVN-3-LOCAL'
+        jdk 'JDK-21'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo "Starting build #$BUILD_NUMBER for repo ${env.GIT_URL} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
+                echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
+                echo "This is the Github Token: ${env.GITHUB_TOKEN}"
+                echo 'mvn -B package'
+            }
+        }
+        stage('Coverity Full Scan') {
+            when { environment name: 'FULLSCAN', value: 'true' }
+            steps {
+                script {
+                    def status = bat(returnStatus: true, script: '''
+                        %BRIDGECLI_WIN64_HOME%\\bridge-cli.exe --stage connect \
+                            coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
+                            coverity.connect.project.name=%REPO_NAME% \
+                            coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
+                            coverity.connect.policy.view=Security-Policy \
+                            coverity.args="-o commit.connect.description=%BUILD_TAG%"
+                    ''')
+                    echo "Status $status"
+                    if (status == 8) { unstable 'policy violation' }
+                    else if (status != 0) { error "scan failure, returned $status" }
+                }
+            }
+        }
+        //github.repository.owner.name=$ORG_NAME \
+        stage('Coverity PR Scan') {
+            when { environment name: 'PRSCAN', value: 'false' }
+            steps {
+                script {
+                    def status = bat(returnStatus: true, script:  '''
+                         set CHANGE_TARGET=main
+                         echo CHANGE_ID: %CHANGE_ID%
+                         set
+                         %BRIDGECLI_WIN64_HOME%\\bridge-cli.exe --stage connect \
+                            coverity.connect.project.name=%REPO_NAME% \
+                            coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
+                            coverity.prcomment.enabled=true \
+                            coverity.prcomment.impacts="[High, Medium, Low, Audit]" \
+                            github.repository.name=hello-java-mkm \
+                            github.repository.owner.name=mathkraemer \
+                            github.repository.branch.name=%BRANCH_NAME% \
+                            github.repository.pull.number=1 \
+                            github.user.token=%GITHUB_TOKEN%
+                    ''')
+                    if (status == 8) { unstable 'policy violation' }
+                    else if (status != 0) { error 'scan failure' }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'No archive action'
+            //archiveArtifacts allowEmptyArchive: true, artifacts: '.bridge/bridge.log, .bridge/*/idir/build-log.txt'
+            //zip archive: true, dir: '.bridge', zipFile: 'bridge-logs.zip'
+            //cleanWs()
+        }
+    }
+}
