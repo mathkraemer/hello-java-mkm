@@ -86,7 +86,7 @@ pipeline {
                     ''')
                     echo "PR Scan Status: $status"
                     if (status == 8) { unstable 'policy violation' }
-                    else if (status != 0) { error "scan failure, returning $status" }
+                    else if (status != 0) { error "scan failure, returned $status" }
                 }
             }
         }
