@@ -1,10 +1,14 @@
 // example Jenkinsfile for Coverity scans using the Bridge CLI
 // https://documentation.blackduck.com/bundle/bridge/page/documentation/c_overview.html
 
+// Credentials in global Jenkins scope:
+// coverity-local-comitter: user/pwd secret for Coverity
+// github-mathkraemer-pat:  secret text with GitHub fine grained token
+
 // Properties defined on Jenkins node:
 // BRIDGE_CLI_INSTALL_DIRECTORY
 // BRIDGE_COVERITY_INSTALL_DIRECTORY
-// GITHUB_TOKEN
+
 pipeline {
     agent { label 'win64' }
     environment {
@@ -12,15 +16,17 @@ pipeline {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
-        BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
+
         COVERITY_CREDENTIALS = credentials('coverity-local-committer')
+
+        BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
+        BRIDGE_COVERITY_LOCAL = true
         BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
         BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
-        BRIDGE_COVERITY_LOCAL = true
-        //GITHUB_TOKEN = credentials('github-pat')
-        //GITHUB_TOKEN = credentials("mathkraemer")
+        
+        GITHUB_TOKEN = credentials('github-mathkraemer-pat')
     }
     tools {
         maven 'MVN-3-LOCAL'
@@ -73,7 +79,7 @@ pipeline {
                             coverity.prcomment.enabled=true \
                             coverity.prcomment.impacts="[High, Medium, Low, Audit]" \
                             github.repository.name=%REPO_NAME% \
-                            github.repository.owner.name=mathkraemer \
+                            github.repository.owner.name=%ORG_NAME% \
                             github.repository.branch.name=%BRANCH_NAME% \
                             github.repository.pull.number=%CHANGE_ID% \
                             github.user.token=%GITHUB_TOKEN%
