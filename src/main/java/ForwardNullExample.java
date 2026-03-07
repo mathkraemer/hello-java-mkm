@@ -14,4 +14,11 @@ public class ForwardNullExample {
     public static String testA(Object o) {
         return o.toString();
     }
+
+    public static String testbug_1(Object o) {
+        if (o != null)
+            return o.toString();
+        else
+            return "empty";
+    }
 }
