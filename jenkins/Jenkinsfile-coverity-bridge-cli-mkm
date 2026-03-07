@@ -8,7 +8,7 @@
 pipeline {
     agent { label 'win64' }
     environment {
-        //ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
+        ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo "Starting build #$BUILD_NUMBER for url ${env.GIT_URL} of repo ${REPO_NAME} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
                 echo "Branch-Name: ${env.BRANCH_NAME} // CHANGE_TARGET: ${env.CHANGE_TARGET} and ID ${env.CHANGE_ID}"
-                echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
+                echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN for Orgname: $ORG_NAME"
                 echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
                 script {
