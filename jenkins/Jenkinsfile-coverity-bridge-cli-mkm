@@ -4,8 +4,6 @@
 // Properties defined on Jenkins node:
 // BRIDGE_CLI_INSTALL_DIRECTORY
 // BRIDGE_COVERITY_INSTALL_DIRECTORY
-// BRIDGE_COVERITY_CONNECT_USER_NAME
-// BRIDGE_COVERITY_CONNECT_USER_PASSWORD
 // GITHUB_TOKEN
 pipeline {
     agent { label 'win64' }
@@ -16,8 +14,8 @@ pipeline {
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
         COVERITY_CREDENTIALS = credentials('coverity-local-committer')
-        //BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}" // via node env. config
-        //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}" // via node env. config
+        BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
+        BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
         BRIDGE_COVERITY_LOCAL = true
