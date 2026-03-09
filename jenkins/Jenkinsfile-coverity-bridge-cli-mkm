@@ -5,6 +5,10 @@
 // coverity-local-comitter: user/pwd secret for Coverity
 // github-mathkraemer-pat:  secret text with GitHub fine grained token
 
+// Coverity auto installation (Manage Jenkins / System / Black Duck Security Product Configuration)
+// Provide 'Coverity URL' and 'Coverity Credentials'
+// Will install Coverity in [$HOME|%APPDATA%]/.blackduck/bridge/tools/cov-analysis/<coverity-version>
+
 // Properties defined on Jenkins node:
 // BRIDGE_CLI_INSTALL_DIRECTORY
 // BRIDGE_COVERITY_INSTALL_DIRECTORY
