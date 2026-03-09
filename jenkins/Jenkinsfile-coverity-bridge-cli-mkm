@@ -21,10 +21,10 @@ pipeline {
         COVERITY_FULLSCAN_POLICY = 'Security-Policy'
         COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
 
-        BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
+        //BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
         BRIDGE_COVERITY_LOCAL = true
-        BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
-        BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
+        //BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
+        //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
         
@@ -45,10 +45,10 @@ pipeline {
         stage('Coverity Full Scan') {
             when { environment name: 'FULLSCAN', value: 'true' }
             steps {
+                // removed coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                 script {
                     def status = bat(returnStatus: true, script: '''
                         %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
-                            coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
                             coverity.connect.policy.view="%COVERITY_FULLSCAN_POLICY%" \
@@ -64,7 +64,7 @@ pipeline {
         stage('Coverity PR Scan') {
             when { environment name: 'PRSCAN', value: 'true' }
             steps {
-                // removed: 
+                // removed: coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                 script {
                     def status = bat(returnStatus: true, script:  '''
                          %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
