@@ -46,6 +46,8 @@ pipeline {
                 echo 'mvn -B package'
             }
         }
+        // If not using Product Configuration settings, explicit install directory specification with
+        //    coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
         stage('Coverity Full Scan') {
             when { environment name: 'FULLSCAN', value: 'true' }
             steps {
@@ -68,7 +70,6 @@ pipeline {
         stage('Coverity PR Scan') {
             when { environment name: 'PRSCAN', value: 'true' }
             steps {
-                // removed: coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                 script {
                     def status = bat(returnStatus: true, script:  '''
                          %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
