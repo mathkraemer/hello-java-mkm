@@ -26,7 +26,7 @@ pipeline {
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
         
-        GITHUB_TOKEN = credentials('github-mathkraemer-pat')
+        GITHUB_TOKEN = credentials('github-mathkraemer-classic-pat')
     }
     tools {
         maven 'MVN-3-LOCAL'
