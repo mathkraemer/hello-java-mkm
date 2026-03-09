@@ -43,7 +43,7 @@ pipeline {
                 }
             }
             steps {
-                def status = security_scan product: 'coverity',
+                security_scan product: 'coverity',
                     coverity_project_name: "$REPO_NAME",
                     coverity_stream_name: "$REPO_NAME-$BRANCH_NAME",
                     coverity_args: "-o commit.connect.description=\"$BUILD_TAG\"",
@@ -56,8 +56,6 @@ pipeline {
                     //github_token: "$GITHUB_TOKEN",
                     include_diagnostics: false,
                     mark_build_status: 'UNSTABLE'
-
-                echo "Returning Coverity Scan status: $status"
             }
         }
     }
