@@ -66,7 +66,7 @@ pipeline {
                 script {
                     def status = bat(returnStatus: true, script:  '''
                          echo %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect
-                         \bridge-cli.exe --stage connect \
+                         bridge-cli.exe --stage connect \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
