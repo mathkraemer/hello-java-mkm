@@ -23,7 +23,7 @@ public class ForwardNullExample {
     }
 
     public static String testbug_2(Object o) {
-        if (o == null)
+        if (o != null)
             return o.toString();
         else
             return "empty";
