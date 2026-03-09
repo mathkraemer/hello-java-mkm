@@ -37,13 +37,7 @@ pipeline {
             steps {
                 echo "Starting build #$BUILD_NUMBER for url ${env.GIT_URL} of repo ${REPO_NAME} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
                 echo "Branch-Name: ${env.BRANCH_NAME} // CHANGE_TARGET: ${env.CHANGE_TARGET} and ID ${env.CHANGE_ID}"
-                echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN for Orgname: $ORG_NAME"
-                echo "This is the Github Token: ${env.GITHUB_TOKEN}"
                 echo 'mvn -B package'
-                script {
-                    bat('set')
-                    bat('echo GH-PAT: %GITHUB_TOKEN%')
-                }
             }
         }
         stage('Coverity Full Scan') {
@@ -64,16 +58,15 @@ pipeline {
                 }
             }
         }
-        //github.repository.owner.name=$ORG_NAME \
+
         stage('Coverity PR Scan') {
             when { environment name: 'PRSCAN', value: 'true' }
             steps {
+                // removed: 
                 script {
                     def status = bat(returnStatus: true, script:  '''
-                         set CHANGE_TARGET=main
-                         echo CHANGE_ID: %CHANGE_ID%
-                         set
-                         %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
+                         echo %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect
+                         \bridge-cli.exe --stage connect \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
