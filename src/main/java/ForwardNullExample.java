@@ -19,6 +19,6 @@ public class ForwardNullExample {
         if (o != null)
             return o.toString();
         else
-            return "empty";
+            return "empty now";
     }
 }
