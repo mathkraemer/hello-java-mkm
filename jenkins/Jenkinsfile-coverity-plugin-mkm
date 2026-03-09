@@ -46,7 +46,7 @@ pipeline {
                     coverity_args: "-o commit.connect.description=$BUILD_TAG",
                     coverity_policy_view: "%COVERITY_FULLSCAN_POLICY%",
                     coverity_prComment_enabled: true,
-                    coverity.prcomment.impacts: "%COVERITY_PRSCAN_POLICY%",
+                    coverity_prComment_impacts: "%COVERITY_PRSCAN_POLICY%",
                     // coverity_local: true,
                     //coverity_build_command: 'mvn -B -DskipTests package',
                     //coverity_clean_command: 'mvn -B clean',
