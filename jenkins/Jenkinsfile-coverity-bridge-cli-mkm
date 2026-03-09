@@ -51,7 +51,7 @@ pipeline {
                             coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
-                            coverity.connect.policy.view=%COVERITY_FULLSCAN_POLICY% \
+                            coverity.connect.policy.view="%COVERITY_FULLSCAN_POLICY%" \
                             coverity.args="-o commit.connect.description=\\"%BUILD_TAG%\\""
                     ''')
                     echo "Full Scan Status: $status"
@@ -71,7 +71,7 @@ pipeline {
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
-                            coverity.prcomment.impacts=%COVERITY_PRSCAN_POLICY% \
+                            coverity.prcomment.impacts="%COVERITY_PRSCAN_POLICY%" \
                             github.repository.name=%REPO_NAME% \
                             github.repository.owner.name=%ORG_NAME% \
                             github.repository.branch.name=%BRANCH_NAME% \
