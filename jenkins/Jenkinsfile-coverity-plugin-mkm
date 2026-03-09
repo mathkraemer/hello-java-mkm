@@ -50,7 +50,7 @@ pipeline {
                     coverity_policy_view: "$COVERITY_FULLSCAN_POLICY",
                     coverity_prComment_enabled: true,
                     coverity_prComment_impacts: "$COVERITY_PRSCAN_POLICY",
-                    // coverity_local: true,
+                    coverity_local: true,
                     //coverity_build_command: 'mvn -B -DskipTests package',
                     //coverity_clean_command: 'mvn -B clean',
                     //github_token: "$GITHUB_TOKEN",
