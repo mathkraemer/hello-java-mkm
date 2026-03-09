@@ -2,8 +2,8 @@
 // https://plugins.jenkins.io/blackduck-security-scan
 
 // Credentials in global Jenkins scope:
-// coverity-local-comitter: user/pwd secret for Coverity
-// github-mathkraemer-pat:  secret text with GitHub fine grained token
+// coverity-local-comitter: user/pwd secret for Coverity, referenced for Black Duck Coverity Product Config
+// GitHub Fine-Grained/Classic PAT :  Stored as secret text, referenced for Black Duck SCM Token 
 
 // Bridge auto installation (Manage Jenkins / System / Bride CLI download)
 // Will install Black Duck Bridge into default location: [$HOME|%HOMEPATH%]/bridge-cli-bundle/bridge-cli-bundle-<os-type>
@@ -20,7 +20,6 @@ pipeline {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
-        //GITHUB_TOKEN = credentials('github-pat')
 
         COVERITY_FULLSCAN_POLICY = 'Security-Policy'
         COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
@@ -53,7 +52,7 @@ pipeline {
                     coverity_local: true,
                     //coverity_build_command: 'mvn -B -DskipTests package',
                     //coverity_clean_command: 'mvn -B clean',
-                    //github_token: "$GITHUB_TOKEN",
+                    //github_token: "$GITHUB_TOKEN", // uncomment if different from Plugin setup
                     include_diagnostics: false,
                     mark_build_status: 'UNSTABLE'
             }
