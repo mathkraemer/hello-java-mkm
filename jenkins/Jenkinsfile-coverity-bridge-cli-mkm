@@ -67,7 +67,7 @@ pipeline {
                 // removed: 
                 script {
                     def status = bat(returnStatus: true, script:  '''
-                         %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect
+                         %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
