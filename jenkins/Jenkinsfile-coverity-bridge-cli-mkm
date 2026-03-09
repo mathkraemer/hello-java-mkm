@@ -1,28 +1,38 @@
 // example Jenkinsfile for Coverity scans using the Bridge CLI
 // https://documentation.blackduck.com/bundle/bridge/page/documentation/c_overview.html
 
+// Credentials in global Jenkins scope:
+// coverity-local-comitter: user/pwd secret for Coverity
+// github-mathkraemer-pat:  secret text with GitHub fine grained token
+
+// Coverity auto installation (Manage Jenkins / System / Black Duck Security Product Configuration)
+// Provide 'Coverity URL' and 'Coverity Credentials'
+// Will install Coverity in [$HOME|%APPDATA%]/.blackduck/bridge/tools/cov-analysis/<coverity-version>
+
 // Properties defined on Jenkins node:
 // BRIDGE_CLI_INSTALL_DIRECTORY
 // BRIDGE_COVERITY_INSTALL_DIRECTORY
-// BRIDGE_COVERITY_CONNECT_USER_NAME
-// BRIDGE_COVERITY_CONNECT_USER_PASSWORD
-// GITHUB_TOKEN
+
 pipeline {
     agent { label 'win64' }
     environment {
-        //ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
-        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-1]}"
+        ORG_NAME = "${env.GIT_URL.tokenize('/.')[-3]}"
+        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+
+        COVERITY_CREDENTIALS = credentials('coverity-local-committer')
+        COVERITY_FULLSCAN_POLICY = 'Security-Policy'
+        COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
+
         BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
-        //COVERITY_CREDENTIALS = credentials('coverity-committer')
-        //BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}" // via node env. config
-        //BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}" // via node env. config
+        BRIDGE_COVERITY_LOCAL = true
+        BRIDGE_COVERITY_CONNECT_USER_NAME = "${env.COVERITY_CREDENTIALS_USR}"
+        BRIDGE_COVERITY_CONNECT_USER_PASSWORD = "${env.COVERITY_CREDENTIALS_PSW}"
         //BRIDGE_COVERITY_BUILD_COMMAND = 'mvn -B -DskipTests package' // no coverity.yaml overwrite
         //BRIDGE_COVERITY_CLEAN_COMMAND = 'mvn -B clean' // no coverity.yaml overwrite
-        BRIDGE_COVERITY_LOCAL = true
-        //GITHUB_TOKEN = credentials('github-pat')
-        //GITHUB_TOKEN = credentials("mathkraemer")
+        
+        GITHUB_TOKEN = credentials('github-mathkraemer-findegrained-pat')
     }
     tools {
         maven 'MVN-3-LOCAL'
@@ -32,15 +42,12 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Starting build #$BUILD_NUMBER for url ${env.GIT_URL} of repo ${REPO_NAME} on branch ${env.BRANCH_NAME} and build tag ${BUILD_TAG}}"
-                echo "Branch-Name: ${env.BRANCH_NAME} // CHANGE_TARGET: ${env.CHANGE_TARGET}"
-                echo "Running in fullscan: $FULLSCAN prscan: $PRSCAN"
-                echo "This is the Github Token: ${env.GITHUB_TOKEN}"
+                echo "Branch-Name: ${env.BRANCH_NAME} // CHANGE_TARGET: ${env.CHANGE_TARGET} and ID ${env.CHANGE_ID}"
                 echo 'mvn -B package'
-                script {
-                    bat('set')
-                }
             }
         }
+        // If not using Product Configuration settings, explicit install directory specification with
+        //    coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
         stage('Coverity Full Scan') {
             when { environment name: 'FULLSCAN', value: 'true' }
             steps {
@@ -50,37 +57,35 @@ pipeline {
                             coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
-                            coverity.connect.policy.view=Security-Policy \
+                            coverity.connect.policy.view="%COVERITY_FULLSCAN_POLICY%" \
                             coverity.args="-o commit.connect.description=\\"%BUILD_TAG%\\""
                     ''')
-                    echo "Status $status"
-                    if (status == 8) { unstable 'policy violation' }
+                    echo "Full Scan Status: $status"
+                    if (status == 8) { unstable 'Violating Policy: %COVERITY_POLICY%' }
                     else if (status != 0) { error "scan failure, returned $status" }
                 }
             }
         }
-        //github.repository.owner.name=$ORG_NAME \
+
         stage('Coverity PR Scan') {
             when { environment name: 'PRSCAN', value: 'true' }
             steps {
                 script {
                     def status = bat(returnStatus: true, script:  '''
-                         set CHANGE_TARGET=main
-                         echo CHANGE_ID: %CHANGE_ID%
-                         set
                          %BRIDGE_CLI_INSTALL_DIRECTORY%\\bridge-cli.exe --stage connect \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
-                            coverity.prcomment.impacts="[High, Medium, Low, Audit]" \
-                            github.repository.name=hello-java-mkm \
-                            github.repository.owner.name=mathkraemer \
+                            coverity.prcomment.impacts="%COVERITY_PRSCAN_POLICY%" \
+                            github.repository.name=%REPO_NAME% \
+                            github.repository.owner.name=%ORG_NAME% \
                             github.repository.branch.name=%BRANCH_NAME% \
-                            github.repository.pull.number=1 \
+                            github.repository.pull.number=%CHANGE_ID% \
                             github.user.token=%GITHUB_TOKEN%
                     ''')
+                    echo "PR Scan Status: $status"
                     if (status == 8) { unstable 'policy violation' }
-                    else if (status != 0) { error 'scan failure' }
+                    else if (status != 0) { error "scan failure, returned $status" }
                 }
             }
         }
