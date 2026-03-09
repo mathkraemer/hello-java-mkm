@@ -1,0 +1,67 @@
+// example Jenkinsfile for Coverity scans using the Black Duck Security Scan Plugin
+// https://plugins.jenkins.io/blackduck-security-scan
+
+// Credentials in global Jenkins scope:
+// coverity-local-comitter: user/pwd secret for Coverity, referenced for Black Duck Coverity Product Config
+// GitHub Fine-Grained/Classic PAT :  Stored as secret text, referenced for Black Duck SCM Token 
+
+// Bridge auto installation (Manage Jenkins / System / Bride CLI download)
+// Will install Black Duck Bridge into default location: [$HOME|%HOMEPATH%]/bridge-cli-bundle/bridge-cli-bundle-<os-type>
+
+// Coverity auto installation (Manage Jenkins / System / Black Duck Security Product Configuration)
+// Provide 'Coverity URL' and 'Coverity Credentials'
+// Will install Coverity in default location: [$HOME|%APPDATA%]/.blackduck/bridge/tools/cov-analysis/<coverity-version>
+
+
+
+pipeline {
+    agent { label 'win64' }
+    environment {
+        REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
+        FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+        PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
+
+        COVERITY_FULLSCAN_POLICY = 'Security-Policy'
+        COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
+    }
+    tools {
+        maven 'MVN-3-LOCAL'
+        jdk 'JDK-21'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'mvn -B package'
+            }
+        }
+        stage('Coverity') {
+            when {
+                anyOf {
+                    environment name: 'FULLSCAN', value: 'true'
+                    environment name: 'PRSCAN', value: 'true'
+                }
+            }
+            steps {
+                security_scan product: 'coverity',
+                    coverity_project_name: "$REPO_NAME",
+                    coverity_stream_name: "$REPO_NAME-$BRANCH_NAME",
+                    coverity_args: "-o commit.connect.description=\"$BUILD_TAG\"",
+                    coverity_policy_view: "$COVERITY_FULLSCAN_POLICY",
+                    coverity_prComment_enabled: true,
+                    coverity_prComment_impacts: "$COVERITY_PRSCAN_POLICY",
+                    coverity_local: true,
+                    //coverity_build_command: 'mvn -B -DskipTests package',
+                    //coverity_clean_command: 'mvn -B clean',
+                    //github_token: "$GITHUB_TOKEN", // uncomment if different from Plugin setup
+                    include_diagnostics: false,
+                    mark_build_status: 'UNSTABLE'
+            }
+        }
+    }
+    post {
+        always {
+            echo 'No archive action'
+            //cleanWs()
+        }
+    }
+}
