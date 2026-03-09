@@ -23,8 +23,8 @@ pipeline {
         COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
     }
     tools {
-        maven 'maven-3'
-        jdk 'openjdk-21'
+        maven 'MVN-3-LOCAL'
+        jdk 'JDK-21'
     }
     stages {
         stage('Build') {
