@@ -6,11 +6,11 @@
 // github-mathkraemer-pat:  secret text with GitHub fine grained token
 
 // Bridge auto installation (Manage Jenkins / System / Bride CLI download)
-// Will install Black Duck Bridge into: [$HOME|%HOMEPATH%]/bridge-cli-bundle/bridge-cli-bundle-<os-type>
+// Will install Black Duck Bridge into default location: [$HOME|%HOMEPATH%]/bridge-cli-bundle/bridge-cli-bundle-<os-type>
 
 // Coverity auto installation (Manage Jenkins / System / Black Duck Security Product Configuration)
 // Provide 'Coverity URL' and 'Coverity Credentials'
-// Will install Coverity in [$HOME|%APPDATA%]/.blackduck/bridge/tools/cov-analysis/<coverity-version>
+// Will install Coverity in default location: [$HOME|%APPDATA%]/.blackduck/bridge/tools/cov-analysis/<coverity-version>
 
 
 
