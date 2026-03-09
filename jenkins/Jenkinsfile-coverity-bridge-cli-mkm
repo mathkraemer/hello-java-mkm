@@ -18,6 +18,8 @@ pipeline {
         PRSCAN = "${env.CHANGE_TARGET ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
 
         COVERITY_CREDENTIALS = credentials('coverity-local-committer')
+        COVERITY_FULLSCAN_POLICY = 'Security-Policy'
+        COVERITY_PRSCAN_POLICY   = '[High, Medium, Low, Audit]'
 
         BRIDGE_COVERITY_CONNECT_URL = 'http://connect:6080'
         BRIDGE_COVERITY_LOCAL = true
@@ -49,11 +51,11 @@ pipeline {
                             coverity.install.directory=%BRIDGE_COVERITY_INSTALL_DIRECTORY% \
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%BRANCH_NAME% \
-                            coverity.connect.policy.view=Security-Policy \
+                            coverity.connect.policy.view=%COVERITY_FULLSCAN_POLICY% \
                             coverity.args="-o commit.connect.description=\\"%BUILD_TAG%\\""
                     ''')
                     echo "Full Scan Status: $status"
-                    if (status == 8) { unstable 'policy violation' }
+                    if (status == 8) { unstable 'Violating Policy: %COVERITY_POLICY%' }
                     else if (status != 0) { error "scan failure, returned $status" }
                 }
             }
@@ -70,7 +72,7 @@ pipeline {
                             coverity.connect.project.name=%REPO_NAME% \
                             coverity.connect.stream.name=%REPO_NAME%-%CHANGE_TARGET% \
                             coverity.prcomment.enabled=true \
-                            coverity.prcomment.impacts="[High, Medium, Low, Audit]" \
+                            coverity.prcomment.impacts=%COVERITY_PRSCAN_POLICY% \
                             github.repository.name=%REPO_NAME% \
                             github.repository.owner.name=%ORG_NAME% \
                             github.repository.branch.name=%BRANCH_NAME% \
