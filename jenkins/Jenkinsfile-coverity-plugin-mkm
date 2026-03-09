@@ -32,7 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'mvn -B package'
-                bat (set)
+                bat ''' set '''
             }
         }
         stage('Coverity') {
