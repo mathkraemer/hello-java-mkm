@@ -7,3 +7,11 @@
 .settings
 .vs
 target
+
+
+# Coverity exclusions
+.codesight/
+idir
+
+# Gradle builds
+.gradle/
