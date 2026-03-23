@@ -43,7 +43,7 @@ pipeline {
             }
             steps{
                 sigma sigmaToolName: 'Sigma',
-                    commandLine: 'analyze --ignore-policies --format jenkins .'
+                    //commandLine: 'analyze --ignore-policies --format jenkins .'
             }
         }
         stage('Coverity') {

@@ -8,7 +8,7 @@ analyze:
   enable_checkers: []
   disable_checkers: []
   check_metadata_overrides: []
-  format: JSON
+  format: SARIF
   output: sigma-results.json
   ignore_scm: false
   follow_symlinks: false
