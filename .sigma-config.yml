@@ -9,7 +9,7 @@ analyze:
   disable_checkers: []
   check_metadata_overrides: []
   format: JENKINS
-  output: rapid-scan-results.jenkins.json
+  output: sigma-results.json
   ignore_scm: false
   follow_symlinks: false
   include_file_path: []
