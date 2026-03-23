@@ -81,7 +81,7 @@ pipeline {
                     //[sarif(pattern: 'rapid-scan-results.sarif.json')]
                 ]
             )
-            archiveArtifacts artifacts: '**/*.sarif', 
+            archiveArtifacts artifacts: '**/rapid-scan-results.jenkins.json', 
                 fingerprint: true, allowEmptyArchive: true
             //cleanWs()
         }
