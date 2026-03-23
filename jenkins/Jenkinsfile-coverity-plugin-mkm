@@ -16,6 +16,13 @@
 
 pipeline {
     agent { label 'win64' }
+    
+    options {
+        buildDiscarder(
+            logRotator(numToKeepStr: '15')
+        )
+    }
+
     environment {
         REPO_NAME = "${env.GIT_URL.tokenize('/.')[-2]}"
         FULLSCAN = "${env.BRANCH_NAME ==~ /^(main|master|develop|stage|release)$/ ? 'true' : 'false'}"
