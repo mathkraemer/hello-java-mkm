@@ -42,8 +42,7 @@ pipeline {
                 }
             }
             steps{
-                sigma sigmaToolName: 'Sigma',
-                      commandLine: '--base-check-set all'
+                sigma sigmaToolName: 'Sigma'
             }
         }
         stage('Coverity') {
