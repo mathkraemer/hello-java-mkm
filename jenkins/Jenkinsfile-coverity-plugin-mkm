@@ -34,6 +34,18 @@ pipeline {
                 echo 'mvn -B package'
             }
         }
+        stage('Rapid Scan'){
+            when {
+                anyOf {
+                    environment name: 'FULLSCAN', value: 'true'
+                    environment name: 'PRSCAN', value: 'true'
+                }
+            }
+            steps{
+                sigma sigmaToolName: 'Sigma',
+                      commandLine: '--base-check-set all'
+            }
+        }
         stage('Coverity') {
             when {
                 anyOf {

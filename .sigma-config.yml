@@ -1,0 +1,24 @@
+revision: 1.0.0
+global:
+  config: []
+  policy: null
+  working_dir: .sigma-dir
+analyze:
+  sbom: null
+  enable_checkers: []
+  disable_checkers: []
+  check_metadata_overrides: []
+  format: JSON
+  output: sigma-results.json
+  ignore_scm: false
+  follow_symlinks: false
+  include_file_path: []
+  include_regex: []
+  exclude_file_path: []
+  exclude_regex: []
+  include_all: false
+  make_paths_absolute: false
+  repo_root: null
+  paths: []
+  base_check_set: null
+  enable_check_set: []
