@@ -8,7 +8,7 @@ analyze:
   enable_checkers: []
   disable_checkers: []
   check_metadata_overrides: []
-  format: SIGMA
+  format: SARIF
   output: rapid-scan-results.sarif.json
   ignore_scm: false
   follow_symlinks: false
