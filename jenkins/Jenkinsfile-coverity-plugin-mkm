@@ -94,7 +94,10 @@ pipeline {
                         usernameVariable: 'COV_USER')]
                 ) {
                     bat '''
-                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --dir ".bridge\\coverity_connect_scan\\2025.12.0\\idir" --stream "$REPO_NAME-$BRANCH_NAME" --preview-report-v3 coverity-preview-v3.json
+                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --dir ".bridge\\coverity_connect_scan\\2025.12.0\\idir" ^
+                          --url http://connect:6080 ^
+                          --stream "$REPO_NAME-$BRANCH_NAME" ^
+                          --preview-report-v3 coverity-preview-v3.json
                     '''
                 }
             }
