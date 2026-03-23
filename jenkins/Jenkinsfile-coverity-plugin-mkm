@@ -107,7 +107,7 @@ pipeline {
 
                         %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --dir "%COV_IDIR%" ^
                           --exclude-files $COV_EXCLUDE_REGEX ^
-                          --title %COV_REPORT_TITLE%
+                          --title %COV_REPORT_TITLE% ^
                           --sort present,file ^
                           --preview-report %COV_PREVIEW_REPORT% ^
                           --html-output coverity-html-results
