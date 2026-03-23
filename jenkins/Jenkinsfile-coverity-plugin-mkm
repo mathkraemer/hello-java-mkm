@@ -19,7 +19,7 @@ pipeline {
     
     options {
         buildDiscarder(
-            logRotator(numToKeepStr: '20')
+            logRotator(numToKeepStr: '30')
         )
     }
 
@@ -44,8 +44,8 @@ pipeline {
         stage('Rapid Scan Static'){
             when {
                 anyOf {
-                    environment name: 'FULLSCAN', value: 'true'
-                    environment name: 'PRSCAN', value: 'true'
+                    environment name: 'FULLSCAN', value: 'disabled'
+                    environment name: 'PRSCAN', value: 'disabled'
                 }
             }
             failFast false
@@ -94,7 +94,7 @@ pipeline {
                         usernameVariable: 'COV_USER')]
                 ) {
                     bat '''
-                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --dir '.bridge\\coverity_connect_scan\\2025.12.0\\idir' --stream "$REPO_NAME-$BRANCH_NAME" --preview-report-v3 coverity-preview-v3.json
+                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --dir ".bridge\\coverity_connect_scan\\2025.12.0\\idir" --stream "$REPO_NAME-$BRANCH_NAME" --preview-report-v3 coverity-preview-v3.json
                     '''
                 }
             }
