@@ -61,7 +61,7 @@ pipeline {
         stage('Coverity') {
             when {
                 anyOf {
-                    environment name: 'FULLSCAN', value: 'disable'
+                    environment name: 'FULLSCAN', value: 'true'
                     environment name: 'PRSCAN', value: 'disable'
                 }
             }
@@ -79,6 +79,11 @@ pipeline {
                     //github_token: "$GITHUB_TOKEN", // uncomment if different from Plugin setup
                     include_diagnostics: false,
                     mark_build_status: 'UNSTABLE'
+
+                bat '''
+                    echo %COV_HOST%
+                    echo %USER%
+                '''
             }
         }
     }
