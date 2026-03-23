@@ -20,5 +20,5 @@ analyze:
   make_paths_absolute: false
   repo_root: null
   paths: []
-  base_check_set: null
+  base_check_set: all
   enable_check_set: []
