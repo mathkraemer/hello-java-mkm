@@ -42,8 +42,8 @@ pipeline {
                 }
             }
             steps{
-                sigma sigmaToolName: 'Sigma' ,
-                    commandLine: 'analyze --ignore-policies --base-check-set all --format jenkins .' // explicit jenkins output.
+                sigma sigmaToolName: 'Sigma' //,
+                    //commandLine: 'analyze --ignore-policies true --base-check-set all --format jenkins .' // explicit jenkins output.
             }
         }
         stage('Coverity') {
