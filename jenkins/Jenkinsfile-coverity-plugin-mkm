@@ -75,7 +75,8 @@ pipeline {
             recordIssues(
                 sourceCodeRetention: 'LAST_BUILD', 
                 tools: [
-                    [$class: 'SigmaTool',  linesLookAhead: 4, name: 'Black Duck Rapid Scan Results']
+                    [$class: 'SigmaTool',   name: 'Black Duck Rapid Scan Static Results',
+                     linesLookAhead: 4, pattern: '**/sigma-results.json' ]
                     //[sarif(pattern: 'rapid-scan-results.sarif.json')]
                 ]
             )
