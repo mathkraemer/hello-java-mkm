@@ -34,17 +34,28 @@ pipeline {
                 echo 'mvn -B package'
             }
         }
-        stage('Rapid Scan'){
+        stage('Rapid Scan Static'){
             when {
                 anyOf {
                     environment name: 'FULLSCAN', value: 'true'
                     environment name: 'PRSCAN', value: 'true'
                 }
             }
-            steps{
-                sigma sigmaToolName: 'Sigma' //,
-                    //commandLine: 'analyze --ignore-policies true --base-check-set all --format jenkins .' // explicit jenkins output.
+            parallel {
+                stage('Jenkins Format') {
+                    steps{
+                        sigma sigmaToolName: 'Sigma' //,
+                            //commandLine: 'analyze --ignore-policies true --format jenkins .' // explicit jenkins output.
+                    }
+                }
+                stage('SARIF Format') {
+                    steps{
+                        sigma sigmaToolName: 'Sigma' ,
+                            commandLine: 'analyze --ignore-policies true --format sarif --output rapid-scan-results.sarif.json.' // override .sigma-config settings
+                    }
+                }
             }
+            
         }
         stage('Coverity') {
             when {
@@ -82,6 +93,8 @@ pipeline {
                 ]
             )
             archiveArtifacts artifacts: '**/rapid-scan-results.jenkins.json', 
+                fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/rapid-scan-results.sarif.json', 
                 fingerprint: true, allowEmptyArchive: true
             //cleanWs()
         }
