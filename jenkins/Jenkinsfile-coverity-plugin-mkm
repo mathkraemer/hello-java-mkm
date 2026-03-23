@@ -41,7 +41,7 @@ pipeline {
                     environment name: 'PRSCAN', value: 'true'
                 }
             }
-            failFast true
+            failFast false
             parallel {
                 stage('Rapid Scan Jenkins Format') {
                     steps{
