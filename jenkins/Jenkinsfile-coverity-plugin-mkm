@@ -81,8 +81,9 @@ pipeline {
                     mark_build_status: 'UNSTABLE'
 
                 bat '''
-                    echo %COV_HOST%
-                    echo %USER%
+                    echo ========= Print env vars ============
+                    set
+                    echo =====================================
                 '''
             }
         }
