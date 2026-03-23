@@ -43,7 +43,7 @@ pipeline {
             }
             steps{
                 sigma sigmaToolName: 'Sigma' ,
-                    commandLine: 'analyze --ignore-policies --base-check-set all --format json .' // explicit sarif output.
+                    commandLine: 'analyze --ignore-policies --base-check-set all --format jenkins .' // explicit jenkins output.
             }
         }
         stage('Coverity') {
@@ -76,8 +76,8 @@ pipeline {
                 sourceCodeRetention: 'LAST_BUILD', 
                 tools: [
                     [$class: 'SigmaTool',  linesLookAhead: 4, 
-                     name: 'Black Duck Rapid Scan Results', pattern: 'rapid-scan-results.sarif.json'],
-                    [sarif(pattern: 'rapid-scan-results.sarif.json')]
+                     name: 'Black Duck Rapid Scan Results', pattern: 'rapid-scan-results.sarif.json']
+                    //[sarif(pattern: 'rapid-scan-results.sarif.json')]
                 ]
             )
             archiveArtifacts artifacts: '**/*.sarif', fingerprint: true, allowEmptyArchive: true
