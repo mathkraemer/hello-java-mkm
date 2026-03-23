@@ -43,7 +43,7 @@ pipeline {
             }
             steps{
                 sigma sigmaToolName: 'Sigma' ,
-                    commandLine: 'analyze --ignore-policies --format sarif .' // explicit sarif output.
+                    commandLine: 'analyze --ignore-policies --base-check-set all --format sarif .' // explicit sarif output.
             }
         }
         stage('Coverity') {
