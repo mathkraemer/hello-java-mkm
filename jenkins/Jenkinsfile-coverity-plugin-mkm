@@ -88,7 +88,7 @@ pipeline {
                     mark_build_status: 'UNSTABLE'
 
                 withCredentials(
-                    [usernamePassword
+                    [usernamePassword(
                         credentialsId: 'coverity-local-committer', 
                         passwordVariable: 'COVERITY_PASSPHRASE', 
                         usernameVariable: 'COV_USER')]
