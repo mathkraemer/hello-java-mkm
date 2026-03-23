@@ -8,8 +8,8 @@ analyze:
   enable_checkers: []
   disable_checkers: []
   check_metadata_overrides: []
-  format: JSON
-  output: sigma-results.json
+  format: SIGMA
+  output: rapid-scan-results.sarif.json
   ignore_scm: false
   follow_symlinks: false
   include_file_path: []
