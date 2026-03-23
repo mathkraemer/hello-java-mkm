@@ -145,9 +145,29 @@ pipeline {
                         linesLookAhead: 4, pattern: '**/rapid-scan-results.sarif.json')
                 ]
             )
+
+            publishHTML(
+                [allowMissing: true, 
+                alwaysLinkToLastBuild: false, 
+                icon: '', 
+                keepAll: true, 
+                reportDir: 'coverity-html-results', 
+                reportFiles: 'index.html', 
+                reportName: 'Coverity Scan Html Report on Build #$BUILD_ID', 
+                reportTitles: 'Coverity Scan Results Build #$BUILD_ID', 
+                useWrapperFileDirectly: true]
+            )
+
             archiveArtifacts artifacts: '**/rapid-scan-results.jenkins.json', 
                 fingerprint: true, allowEmptyArchive: true
             archiveArtifacts artifacts: '**/rapid-scan-results.sarif.json', 
+                fingerprint: true, allowEmptyArchive: true
+
+            archiveArtifacts artifacts: '**/coverity-preview-v3.json', 
+                fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/coverity-local-results.json', 
+                fingerprint: true, allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/coverity-local-results.txt', 
                 fingerprint: true, allowEmptyArchive: true
             //cleanWs()
         }
