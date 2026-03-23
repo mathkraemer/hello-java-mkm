@@ -7,3 +7,7 @@
 .settings
 .vs
 target
+
+
+// Blackduck ignore dirs
+idir/

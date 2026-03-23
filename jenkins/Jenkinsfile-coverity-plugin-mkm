@@ -2,7 +2,7 @@
 // https://plugins.jenkins.io/blackduck-security-scan
 
 // Credentials in global Jenkins scope:
-// coverity-local-comitter: user/pwd secret for Coverity, referenced for Black Duck Coverity Product Config
+// coverity-local-committer: user/pwd secret for Coverity, referenced for Black Duck Coverity Product Config
 // GitHub Fine-Grained/Classic PAT :  Stored as secret text, referenced for Black Duck SCM Token 
 
 // Bridge auto installation (Manage Jenkins / System / Bride CLI download)
@@ -26,7 +26,7 @@ pipeline {
     }
     tools {
         maven 'MVN-3-LOCAL'
-        jdk 'JDK-21'
+        jdk 'JDK-25'
     }
     stages {
         stage('Build') {
