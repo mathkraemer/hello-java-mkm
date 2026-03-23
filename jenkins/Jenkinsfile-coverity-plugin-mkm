@@ -87,11 +87,11 @@ pipeline {
             recordIssues(
                 //sourceCodeRetention: 'LAST_BUILD', // ['NEVER', 'LAST_BUILD', 'MODIFIED']
                 failOnError: false,
-                healthy: 1,
+                healthy: 1, unhealthy: 3,
                 name: 'Black Duck Rapid Scan Static',
                 tools: [
-                    [$class: 'SigmaTool', name: 'Jenkins Format',
-                        linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json'],
+                    //[$class: 'SigmaTool', name: 'Jenkins Format',
+                    //    linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json'],
                     [sarif(name: 'SARIF Format', 
                         linesLookAhead: 4, pattern: '**/rapid-scan-results.sarif.json')]
                 ]
