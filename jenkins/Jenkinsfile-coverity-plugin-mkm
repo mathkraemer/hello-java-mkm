@@ -100,19 +100,19 @@ pipeline {
                         set COV_PREVIEW_REPORT=coverity-preview-v3.json
                         set COV_REPORT_TITLE="Coverity Scan Results of Build #%BUILD_ID%"
 
-                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --ticker-mode no-spin --dir "%IDIR%" ^
+                        %COVERITY_TOOL_HOME%\\bin\\cov-commit-defects --ticker-mode no-spin --dir "%COV_IDIR%" ^
                           --url http://connect:6080 ^
                           --stream "%REPO_NAME%-%BRANCH_NAME%" ^
                           --preview-report-v3 %COV_PREVIEW_REPORT%
 
-                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%IDIR%" ^
+                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%COV_IDIR%" ^
                           --exclude-files $COV_EXCLUDE_REGEX ^
                           --title %COV_REPORT_TITLE%
                           --sort present,file ^
                           --preview-report %COV_PREVIEW_REPORT% ^
                           --html-output coverity-html-results
 
-                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%IDIR%" ^
+                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%COV_IDIR%" ^
                           --text-output-style multiline ^
                           --title %COV_REPORT_TITLE% ^
                           --exclude-files $COV_EXCLUDE_REGEX ^
@@ -120,7 +120,7 @@ pipeline {
                           --preview-report %COV_PREVIEW_REPORT% ^
                           > coverity-local-results.txt
 
-                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%IDIR%" ^
+                        %COVERITY_TOOL_HOME%\\bin\\cov-format-errors --ticker-mode no-spin --dir "%COV_IDIR%" ^
                           --title %COV_REPORT_TITLE% ^
                           --exclude-files $COV_EXCLUDE_REGEX ^
                           --sort present,file ^
