@@ -52,7 +52,7 @@ pipeline {
                 stage('Rapid Scan SARIF Format') {
                     steps{
                         sigma sigmaToolName: 'Sigma' ,
-                            commandLine: 'analyze --ignore-policies true --format sarif --output rapid-scan-results.sarif.json.' // override .sigma-config settings
+                            commandLine: 'analyze --ignore-policies true --format sarif --output rapid-scan-results.sarif.json .' // override .sigma-config settings
                     }
                 }
             }
