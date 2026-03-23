@@ -153,8 +153,8 @@ pipeline {
                 keepAll: true, 
                 reportDir: 'coverity-html-results', 
                 reportFiles: 'index.html', 
-                reportName: 'Coverity Scan Html Report on Build #$BUILD_ID', 
-                reportTitles: 'Coverity Scan Results Build #$BUILD_ID', 
+                reportName: "Coverity Scan #$BUILD_ID", 
+                reportTitles: "Coverity Html Report Build #$BUILD_ID", 
                 useWrapperFileDirectly: true]
             )
 
