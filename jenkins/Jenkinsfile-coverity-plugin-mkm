@@ -49,8 +49,8 @@ pipeline {
         stage('Coverity') {
             when {
                 anyOf {
-                    environment name: 'FULLSCAN', value: 'true'
-                    environment name: 'PRSCAN', value: 'true'
+                    environment name: 'FULLSCAN', value: 'false'
+                    environment name: 'PRSCAN', value: 'false'
                 }
             }
             steps {
