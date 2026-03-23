@@ -73,10 +73,10 @@ pipeline {
     post {
         always {
             recordIssues(
-                tools: 
                 sourceCodeRetention: 'LAST_BUILD', 
                 tools: [
-                    [$class: 'SigmaTool',  linesLookAhead: 4, name: 'Black Duck Rapid Scan Results', pattern: 'rapid-scan-results.sarif.json'],
+                    [$class: 'SigmaTool',  linesLookAhead: 4, 
+                     name: 'Black Duck Rapid Scan Results', pattern: 'rapid-scan-results.sarif.json'],
                     [sarif(pattern: 'rapid-scan-results.sarif.json')]
                 ]
             )
