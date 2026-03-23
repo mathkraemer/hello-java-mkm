@@ -90,8 +90,8 @@ pipeline {
                 healthy: 1,
                 name: 'Black Duck Rapid Scan Static',
                 tools: [
-                    [SigmaTool(name: 'Jenkins Format',
-                        linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json')],
+                    [$class: 'SigmaTool', name: 'Jenkins Format',
+                        linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json'],
                     [sarif(name: 'SARIF Format', 
                         linesLookAhead: 4, pattern: '**/rapid-scan-results.sarif.json')]
                 ]
