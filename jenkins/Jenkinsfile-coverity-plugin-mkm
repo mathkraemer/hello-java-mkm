@@ -92,7 +92,7 @@ pipeline {
                     //[SigmaTool(name: 'Jenkins Format',
                     //    linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json')],
                     [sarif(name: 'SARIF Format', 
-                        linesLookAhead: 4 pattern: '**/rapid-scan-results.sarif.json')]
+                        linesLookAhead: 4, pattern: '**/rapid-scan-results.sarif.json')]
                 ]
             )
             archiveArtifacts artifacts: '**/rapid-scan-results.jenkins.json', 
