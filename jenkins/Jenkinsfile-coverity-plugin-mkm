@@ -42,13 +42,13 @@ pipeline {
                 }
             }
             parallel {
-                stage('Jenkins Format') {
+                stage('Rapid Scan Jenkins Format') {
                     steps{
                         sigma sigmaToolName: 'Sigma' //,
                             //commandLine: 'analyze --ignore-policies true --format jenkins .' // explicit jenkins output.
                     }
                 }
-                stage('SARIF Format') {
+                stage('Rapid Scan SARIF Format') {
                     steps{
                         sigma sigmaToolName: 'Sigma' ,
                             commandLine: 'analyze --ignore-policies true --format sarif --output rapid-scan-results.sarif.json.' // override .sigma-config settings
@@ -84,12 +84,15 @@ pipeline {
     post {
         always {
             recordIssues(
-                sourceCodeRetention: 'LAST_BUILD', 
+                sourceCodeRetention: 'EVERY', // ['NEVER', 'LAST_BUILD', 'MODIFIED', 'EVERY']
+                failOnError: true,
+                healthy: 1,
+                name: 'Black Duck Rapid Scan Static',
                 tools: [
-                    [$class: 'SigmaTool', 
-                        name: 'Black Duck Rapid Scan Static Results',
-                        linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json' ]
-                    //[sarif(pattern: 'rapid-scan-results.sarif.json')]
+                    [SigmaTool(name: 'Jenkins Format',
+                        linesLookAhead: 4, pattern: '**/rapid-scan-results.jenkins.json')],
+                    [sarif(name: 'SARIF Format', 
+                        linesLookAhead: 4 pattern: '**/rapid-scan-results.sarif.json')]
                 ]
             )
             archiveArtifacts artifacts: '**/rapid-scan-results.jenkins.json', 
