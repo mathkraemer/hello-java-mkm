@@ -84,7 +84,7 @@ pipeline {
     post {
         always {
             recordIssues(
-                sourceCodeRetention: 'ALL', // ['NEVER', 'LAST_BUILD', 'MODIFIED', 'EVERY']
+                //sourceCodeRetention: 'LAST_BUILD', // ['NEVER', 'LAST_BUILD', 'MODIFIED']
                 failOnError: true,
                 healthy: 1,
                 name: 'Black Duck Rapid Scan Static',
